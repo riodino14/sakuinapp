@@ -1,25 +1,37 @@
 <?php
 
 namespace App\Filament\Widgets;
-
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Illuminate\Support\Carbon; //setting tentang waktu 
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 use App\Models\Transaction; 
 class WidgetIncomeChart extends ChartWidget
-{
-    protected static ?string $heading = 'Chart';
+{ 
+    use InteractsWithPageFilters;
+    protected static ?string $heading = 'Pemasukan Per hari';
     protected static string $color = 'success';
+
     protected function getData(): array
     {
-       $data = Trend::query(Transaction::incomes())
+        $startDate = ! is_null($this->filters['startDate'] ?? null) ?
+            Carbon::parse($this->filters['startDate']) :
+            null;
+
+        $endDate = ! is_null($this->filters['endDate'] ?? null) ?
+            Carbon::parse($this->filters['endDate']) :
+            now();
+            
+        $data = Trend::query(Transaction::incomes())
+            ->dateColumn('date_transaction') 
             ->between(
-                start: now()->startOfYear(),
-                end: now()->endOfYear(),
+                start: $startDate, 
+                end: $endDate,
             )
             ->perDay()
             ->sum('amount');
-    
+        
         return [
             'datasets' => [
                 [

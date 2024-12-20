@@ -30,7 +30,7 @@ class TransactionResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\DatePicker::make('date')
+                Forms\Components\DatePicker::make('date_transaction')
                     ->required(),
                 Forms\Components\TextInput::make('amount')
                     ->required()
@@ -60,14 +60,13 @@ class TransactionResource extends Resource
                     ->trueColor('danger')
                     ->falseColor('success')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('date')
+                Tables\Columns\TextColumn::make('date_transaction')
                     ->date()
                     ->sortable(),
                
 
                 Tables\Columns\TextColumn::make('amount')
                     ->label('Jumlah')
-                    ->money('id')
                     ->sortable()
                     ->numeric(),
                     
